@@ -1,0 +1,85 @@
+1
+
+Alter table mydb.developers add salary int;
+UPDATE mydb.developers
+SET
+    salary = 1000
+WHERE
+    id = 1;
+
+UPDATE mydb.developers
+SET
+    salary = 2000
+WHERE
+    id = 2;
+
+UPDATE mydb.developers
+SET
+    salary = 3000
+WHERE
+    id = 3;
+
+
+2
+
+SELECT
+projects_has_developers.projects_id
+FROM
+projects_has_developers
+LEFT JOIN developers ON developers.id = projects_has_developers.developers_id
+ORDER BY
+developers.salary DESC LIMIT 1
+
+
+3
+
+SELECT SUM(developers.salary) FROM developers
+
+4
+
+Alter table mydb.projects add cost int;
+
+UPDATE mydb.projects
+SET
+    cost = 100
+WHERE
+    id = 1;
+
+UPDATE mydb.projects
+SET
+    cost = 200
+WHERE
+    id = 2;
+
+UPDATE mydb.projects
+SET
+    cost = 300
+WHERE
+    id = 3;
+
+
+5
+
+SELECT company_id,customers_id,MIN(summ) FROM(
+SELECT
+companies.id as company_id,
+customers_has_projects.customers_id as customers_id,
+SUM(projects.cost) as summ
+FROM
+companies
+LEFT JOIN companies_has_projects ON companies_has_projects.companies_id = companies.id
+LEFT JOIN customers_has_projects ON customers_has_projects.projects_id = companies_has_projects.projects_id
+LEFT JOIN projects ON projects.id = customers_has_projects.projects_id
+GROUP BY 1,2 )as select_name GROUP BY 1
+
+6
+
+SELECT
+projects.id,
+AVG(developers.salary) as avg_salary
+FROM
+projects
+LEFT JOIN projects_has_developers ON projects_has_developers.projects_id = projects.id
+LEFT JOIN developers ON developers.id = projects_has_developers.developers_id
+GROUP BY 1
+ORDER BY 2 asc LIMIT 1
